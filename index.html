@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Jimmy Carter Facts</title>
+		<style>
+			html {
+				background-image: url("data/jimmy.jpg");
+				color: white;
+			}
+
+			#blank {
+				position: fixed;
+				top: 0;
+				left: 0;
+				background: rgba(255, 0, 0, 1.0);
+				height: 100%;
+				width: 100%;
+			}
+
+			#blank > div {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+			}
+
+			#blank p {
+				font-size: 25vh;
+			}
+
+			.slidedown {
+				animation: slidedown 25s linear
+			}
+
+			@keyframes slidedown {
+				from { top: 0px;}
+				to { top: 100vh;}
+			}
+
+			#content {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+
+			#template {
+				display: none;
+			}
+
+			.fact {
+				background: rgba(255, 255, 255, 0.5);
+				border-radius: 6px;
+				width: calc(33% - 40px);
+				margin: 10px;
+			}
+
+			.fact .text {
+				margin: 16px;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="blank">
+			<div>
+				<p>Loading...</p>
+			</div>
+		</div>
+		<audio id="audio" loop>
+			<source src="data/jimmy.ogg">
+		</audio>
+		<div id="content">
+			<div id="template" class="fact">
+				<p class="text"></p>
+			</div>
+		</div>
+		<script>
+(function() {
+	var facts = [
+		{
+			"text": "He had a peanut farm with his siblings."
+		},
+		{
+			"text": "39th President of the United States, from 1977 until 1981."
+		},
+		{
+			"text": "76th Governor of Georgia, from 1971 until 1975."
+		}
+	];
+	function setUp() {
+		var step = 0.01;
+		var wipeProgress = 0.0;
+		var blank = document.getElementById("blank");
+		var audio = document.getElementById("audio");
+		audio.volume = 0.0;
+
+		function fadeIn() {
+			wipeProgress += step;
+			blank.style.top = (wipeProgress * blank.clientHeight) + "px";
+
+			try {
+				audio.volume += step;
+			} catch (e) {
+				audio.volume = 1.0;
+			}
+
+			// accelerate to make everything look smooth
+			step *= 1.1
+			if (wipeProgress >= 1) {
+				blank.style.display = "none";
+				audio.volume = 1.0;
+				console.log("DEBUG Fade in finished");
+				factPrinter();
+			} else {
+				setTimeout(fadeIn, 50);
+			}
+		}
+
+		audio.addEventListener("progress", function(){
+			if (audio.buffered.length > 0) {
+				if (audio.buffered.end(0) === audio.duration) {
+					console.log("DEBUG Frames:", audio.buffered.length);
+					audio.play();
+					audio.fastSeek(40.0);
+					fadeIn();
+				}
+			}
+		});
+	}
+
+	function factPrinter() {
+		var template = document.getElementById("template");
+		var container = document.getElementById("content");
+
+		function createFact() {
+			var rand_int = Math.floor(Math.random() * facts.length);
+			var newNode = template.cloneNode(true);
+
+			newNode.getElementsByClassName('text')[0].innerHTML = facts[rand_int].text;
+			newNode.id = "";
+			container.insertBefore(newNode, container.firstChild);
+
+			setTimeout(createFact, 5000);
+		}
+
+		createFact();
+
+	}
+
+	setUp();
+})()
+		</script>
+	</body>
+</html>
