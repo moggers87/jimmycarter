@@ -4,7 +4,7 @@
 		<title>Jimmy Carter Facts</title>
 		<style>
 			html {
-				background-image: url("data/jimmy.jpg");
+				background-image: url("./data/jimmy.jpg");
 				color: white;
 			}
 
@@ -68,7 +68,7 @@
 			</div>
 		</div>
 		<audio id="audio" loop>
-			<source src="data/jimmy.ogg">
+			<source src="./data/jimmy.ogg">
 		</audio>
 		<div id="content">
 			<div id="template" class="fact">
@@ -148,6 +148,7 @@
 				}
 			}
 		});
+		audio.load();
 	}
 
 	function factPrinter() {
