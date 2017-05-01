@@ -67,8 +67,8 @@
 				<p>Loading...</p>
 			</div>
 		</div>
-		<audio id="audio" loop>
-			<source src="./data/jimmy.ogg">
+		<audio id="audio" loop preload="auto">
+			<source src="./data/jimmy.ogg" type="audio/ogg">
 		</audio>
 		<div id="content">
 			<div id="template" class="fact">
@@ -115,6 +115,7 @@
 	function setUp() {
 		var step = 0.01;
 		var wipeProgress = 0.0;
+		var audioPlaying = false;
 		var blank = document.getElementById("blank");
 		var audio = document.getElementById("audio");
 		audio.volume = 0.0;
@@ -139,15 +140,16 @@
 			audioFadeIn();
 		}
 
-		audio.load();
-		audio.addEventListener("progress", function(){
-			if (audio.buffered.length > 0) {
-				if (audio.buffered.end(0) === audio.duration) {
-					console.log("DEBUG Frames:", audio.buffered.length);
+		audio.addEventListener("loadeddata", function(){
+			if (!audioPlaying) {
+				console.log("DEBUG ReadyState: ", audio.readyState);
+				if (audio.readyState >= 2) {
+					audioPlaying = true;
 					fadeIn();
 				}
 			}
 		});
+		console.log("DEBUG Setup done")
 	}
 
 	function factPrinter() {
