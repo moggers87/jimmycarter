@@ -139,6 +139,7 @@
 			audioFadeIn();
 		}
 
+		audio.load();
 		audio.addEventListener("progress", function(){
 			if (audio.buffered.length > 0) {
 				if (audio.buffered.end(0) === audio.duration) {
@@ -147,7 +148,6 @@
 				}
 			}
 		});
-		audio.load();
 	}
 
 	function factPrinter() {
