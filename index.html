@@ -29,7 +29,7 @@
 			}
 
 			.slidedown {
-				animation: slidedown 25s linear
+				animation: slidedown 5s linear
 			}
 
 			@keyframes slidedown {
@@ -95,34 +95,31 @@
 		var audio = document.getElementById("audio");
 		audio.volume = 0.0;
 
-		function fadeIn() {
-			wipeProgress += step;
-			blank.style.top = (wipeProgress * blank.clientHeight) + "px";
-
+		function audioFadeIn() {
 			try {
 				audio.volume += step;
 			} catch (e) {
 				audio.volume = 1.0;
 			}
+			setTimeout(audioFadeIn, step * 5000);  // animation lasts ~5 seconds
+		}
 
-			// accelerate to make everything look smooth
-			step *= 1.1
-			if (wipeProgress >= 1) {
+		function fadeIn() {
+			audio.play();
+			audio.fastSeek(40.0);
+			blank.addEventListener("animationend", function() {
 				blank.style.display = "none";
-				audio.volume = 1.0;
-				console.log("DEBUG Fade in finished");
 				factPrinter();
-			} else {
-				setTimeout(fadeIn, 50);
-			}
+			});
+
+			blank.classList.add("slidedown");
+			audioFadeIn();
 		}
 
 		audio.addEventListener("progress", function(){
 			if (audio.buffered.length > 0) {
 				if (audio.buffered.end(0) === audio.duration) {
 					console.log("DEBUG Frames:", audio.buffered.length);
-					audio.play();
-					audio.fastSeek(40.0);
 					fadeIn();
 				}
 			}
