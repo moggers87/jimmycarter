@@ -155,12 +155,20 @@
 		var container = document.getElementById("content");
 
 		function createFact() {
+			if (facts.length === 0) {
+				return;
+			}
+
 			var rand_int = Math.floor(Math.random() * facts.length);
 			var newNode = template.cloneNode(true);
+			var factObj = facts[rand_int]
 
-			newNode.getElementsByClassName('text')[0].innerHTML = facts[rand_int].text;
+			newNode.getElementsByClassName('text')[0].innerHTML = factObj.text;
 			newNode.id = "";
+
 			container.insertBefore(newNode, container.firstChild);
+
+			facts.splice(rand_int, 1);
 
 			setTimeout(createFact, 5000);
 		}
